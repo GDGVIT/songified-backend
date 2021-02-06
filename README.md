@@ -15,10 +15,13 @@
 
 
 ## Features
-- [ ]  < feature >
-- [ ]  < feature >
-- [ ]  < feature >
-- [ ]  < feature >
+- [ ]  < User Account Creation >
+- [ ]  < Search Song and get Tempo and Key (Sign In Not Required) >
+- [ ]  < Upload Song and get Tempo and Key (Sign In Required) >
+- [ ]  < SongBook (Sign In Required) >
+- [ ]  < Enter User Info About Songs to Database (Sign In Required) >
+- [ ]  < Admin Verification of User Info (Sign In Required) >
+- [ ]  < Adding Points on Successful Verification (Sign In Required) >
 
 <br>
 
