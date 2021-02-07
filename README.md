@@ -16,8 +16,8 @@
 
 ## Features
 - [ ]   User Account Creation 
-- [ ]   Search Song and get Tempo and Key (Sign In Not Required) 
-- [ ]   Upload Song and get Tempo and Key (Sign In Required) 
+- [ ]   Search Song and gets Tempo and Key (Sign In Not Required) 
+- [ ]   Upload Song and gets Tempo and Key (Sign In Required) 
 - [ ]   SongBook (Sign In Required) 
 - [ ]   Enter User Info About Songs to Database (Sign In Required) 
 - [ ]   Admin Verification of User Info (Sign In Required) 
