@@ -51,14 +51,14 @@
 		<td>
 		Rehaan Mazid
 		<p align="center">
-			<img src = "https://dscvit.com/images/dsc-logo-square.svg" width="150" height="150" alt="Your Name Here (Insert Your Image Link In Src">
+			<img src = "https://media-exp1.licdn.com/dms/image/C4E03AQGrlm1k4tkucQ/profile-displayphoto-shrink_400_400/0/1599294529564?e=1618444800&v=beta&t=OzTxKYXpQcDDtS3a8Js4AE6giLtKoZRUNaLi6-fJmfg" width="150" height="150" alt="Your Name Here (Insert Your Image Link In Src">
 		</p>
 			<p align="center">
 				<a href = "https://github.com/Rehaan1">
-					<img src = "https://avatars.githubusercontent.com/u/38107493?s=460&v=4" width="36" height = "36" alt="GitHub"/>
+					<img src = "http://www.iconninja.com/files/241/825/211/round-collaboration-social-github-code-circle-network-icon.svg" width="36" height = "36" alt="GitHub"/>
 				</a>
 				<a href = "https://www.linkedin.com/in/rehaan-m-928a88137/">
-					<img src = "https://media-exp1.licdn.com/dms/image/C4E03AQGrlm1k4tkucQ/profile-displayphoto-shrink_400_400/0/1599294529564?e=1618444800&v=beta&t=OzTxKYXpQcDDtS3a8Js4AE6giLtKoZRUNaLi6-fJmfg" width="36" height="36" alt="LinkedIn"/>
+					<img src = "http://www.iconninja.com/files/863/607/751/network-linkedin-social-connection-circular-circle-media-icon.svg" width="36" height="36" alt="LinkedIn"/>
 				</a>
 			</p>
 		</td>
