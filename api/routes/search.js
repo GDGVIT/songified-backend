@@ -77,6 +77,7 @@ router.post('/song', (req, res) => {
           error: songData.search.error
         })
       }
+
       const song = songData.search[0]
 
       const songId = song.id
