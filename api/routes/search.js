@@ -71,14 +71,14 @@ router.post('/song', (req, res) => {
     })
 
     response.on('end', () => {
-      const songData = JSON.parse(body)
-      if (songData.search.error) {
+      const songDataOfSong = JSON.parse(body)
+      if (songDataOfSong.search.error) {
         return res.status(200).json({
-          error: songData.search.error
+          error: songDataOfSong.search.error
         })
       }
 
-      const song = songData.search[0]
+      const song = songDataOfSong.search[0]
 
       const songId = song.id
 
