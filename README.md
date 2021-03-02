@@ -26,8 +26,10 @@
 <br>
 
 ## Dependencies
- - < dependency >
- - < dependency >
+ - express
+ - body-parser
+ - dotenv
+ - morgan
 
 
 ## Running
