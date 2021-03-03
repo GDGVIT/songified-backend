@@ -16,7 +16,7 @@
 
 ## Features
 - [ ]   User Account Creation
-- [ ]   Search Song and gets Tempo and Key (Sign In Not Required)
+- [X]   Search Song and gets Tempo and Key (Sign In Not Required)
 - [ ]   Upload Song and gets Tempo and Key (Sign In Required)
 - [ ]   SongBook (Sign In Required)
 - [ ]   Enter User Info About Songs to Database (Sign In Required)
@@ -26,8 +26,10 @@
 <br>
 
 ## Dependencies
- - < dependency >
- - < dependency >
+ - express
+ - body-parser
+ - dotenv
+ - morgan
 
 
 ## Running
