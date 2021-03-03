@@ -1,8 +1,10 @@
 const express = require('express')
 const https = require('https')
 const router = express.Router()
+const getBpmBaseUrlSearch = 'https://api.getsongbpm.com/search/?api_key='
+const getBpmBaseUrlSong = 'https://api.getsongbpm.com/song/?api_key='
 
-router.post('/song_and_artist', (req, res) => {
+router.post('/songAndArtist', (req, res) => {
   if (!req.body.song_name) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
@@ -17,7 +19,7 @@ router.post('/song_and_artist', (req, res) => {
 
   const songName = req.body.song_name.split(' ').join('+')
   const artist = req.body.artist.split(' ').join('+')
-  const url = 'https://api.getsongbpm.com/search/?api_key=' + process.env.API_KEY + '&type=both&lookup=song:' + songName + ' artist:' + artist
+  const url = getBpmBaseUrlSearch + process.env.API_KEY + '&type=both&lookup=song:' + songName + ' artist:' + artist
 
   https.get(url, (response) => {
     console.log(response.statusCode)
@@ -59,7 +61,7 @@ router.post('/song', (req, res) => {
   }
 
   const songName = req.body.song_name.split(' ').join('+')
-  const url = 'https://api.getsongbpm.com/search/?api_key=' + process.env.API_KEY + '&type=song&lookup=' + songName
+  const url = getBpmBaseUrlSearch + process.env.API_KEY + '&type=song&lookup=' + songName
 
   https.get(url, (response) => {
     console.log(response.statusCode)
@@ -82,7 +84,7 @@ router.post('/song', (req, res) => {
 
       const songId = song.id
 
-      const url2 = 'https://api.getsongbpm.com/song/?api_key=' + process.env.API_KEY + '&id=' + songId
+      const url2 = getBpmBaseUrlSong + process.env.API_KEY + '&id=' + songId
 
       https.get(url2, (response) => {
         console.log(response.statusCode)
