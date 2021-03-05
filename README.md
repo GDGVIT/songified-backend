@@ -30,6 +30,10 @@
  - body-parser
  - dotenv
  - morgan
+ - mongoose
+ - cookie-session
+ - passport
+ - passport-google-oauth20
 
 
 ## Running
