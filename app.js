@@ -3,14 +3,38 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const searchRoute = require('./api/routes/search')
+const authRoute = require('./api/routes/auth-routes')
+/* eslint-disable */
+const passportSetup = require('./config/passport-setup')
+/* eslint-enable */
+const mongoose = require('mongoose')
+const cookieSession = require('cookie-session')
+const passport = require('passport')
 
 const app = express()
 
 const port = process.env.PORT || 3000
 
+app.use(cookieSession({
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [process.env.COOKIE_KEY]
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+mongoose.connect(process.env.MONGODB_DB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to MongoDb Atlas')
+  })
+  .catch(err => {
+    console.log('Error:' + err)
+  })
+
+app.use('/auth', authRoute)
 app.use('/search', searchRoute)
 
 // adding required headers to prevent CORS(Cross Origin Resourse Sharin) Error
