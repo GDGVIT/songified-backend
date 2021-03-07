@@ -19,9 +19,10 @@
 - [X]   Search Song and gets Tempo and Key (Sign In Not Required)
 - [ ]   Upload Song and gets Tempo and Key (Sign In Required)
 - [X]   SongBook (Sign In Required)
-- [ ]   Enter User Info About Songs to Database (Sign In Required)
-- [ ]   Admin Verification of User Info (Sign In Required)
-- [ ]   Adding Points on Successful Verification (Sign In Required)
+- [X]   Enter User Info About Songs to Database (Sign In Required)
+- [X]   Admin Verification of User Info (Sign In Required)
+- [X]   Adding Points on Successful Verification (Sign In Required)
+- [ ]   Show Additional info if exists of song searched (Sign In Not Required)
 
 <br>
 
