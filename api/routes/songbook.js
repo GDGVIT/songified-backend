@@ -25,8 +25,8 @@ router.post('/addSong', authCheck, (req, res) => {
 
 router.patch('/updateSong', authCheck, (req, res) => {
   Songbook.findOne({ songbookId: req.user.songbookId })
-    .then((songbook) => {
-      const ourdata = songbook.data
+    .then((songbookData) => {
+      const ourdata = songbookData.data
       for (let i = 0; i < ourdata.length; i++) {
         if (ourdata[i].songId === req.body.songId) {
           ourdata[i].title = req.body.title
@@ -46,15 +46,15 @@ router.patch('/updateSong', authCheck, (req, res) => {
 router.delete('/deleteSong', authCheck, (req, res) => {
   Songbook.findOne({ songbookId: req.user.songbookId })
     .then((songbook) => {
-      const ourdata = songbook.data
-      for (let i = 0; i < ourdata.length; i++) {
-        if (ourdata[i].songId === req.body.songId) {
-          ourdata.splice(i, 1)
+      const ourdataDelete = songbook.data
+      for (let i = 0; i < ourdataDelete.length; i++) {
+        if (ourdataDelete[i].songId === req.body.songId) {
+          ourdataDelete.splice(i, 1)
         }
       }
       Songbook.updateOne({ songbookId: req.user.songbookId },
-        { $set: { data: ourdata } })
-        .then((update) => {
+        { $set: { data: ourdataDelete } })
+        .then((deleted) => {
           res.status(200).json({
             message: 'song deleted from songbook'
           })
