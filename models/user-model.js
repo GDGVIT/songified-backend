@@ -13,6 +13,9 @@ const userSchema = new Schema({
   },
   points: {
     type: Number
+  },
+  songbookId: {
+    type: String
   }
 })
 

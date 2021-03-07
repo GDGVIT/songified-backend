@@ -1,6 +1,8 @@
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20')
 const User = require('../models/user-model')
+const Songbook = require('../models/songbook-model')
+const uuid4 = require('uuid4')
 
 passport.serializeUser((user, done) => {
   done(null, user.id)
@@ -22,14 +24,22 @@ passport.use(new GoogleStrategy({
       if (currentUser) {
         done(null, currentUser)
       } else {
+        const id = uuid4()
         new User({
           username: profile.displayName,
           googleId: profile.id,
-          points: 0
+          points: 0,
+          songbookId: id.toString()
         })
           .save()
           .then((newUser) => {
-            done(null, newUser)
+            new Songbook({
+              songbookId: id.toString()
+            })
+              .save()
+              .then((newSongbook) => {
+                done(null, newUser)
+              })
           })
       }
     })

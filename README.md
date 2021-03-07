@@ -15,7 +15,7 @@
 
 
 ## Features
-- [ ]   User Account Creation
+- [X]   User Account Creation
 - [X]   Search Song and gets Tempo and Key (Sign In Not Required)
 - [ ]   Upload Song and gets Tempo and Key (Sign In Required)
 - [ ]   SongBook (Sign In Required)
@@ -34,6 +34,7 @@
  - cookie-session
  - passport
  - passport-google-oauth20
+ - uuid4
 
 
 ## Running
