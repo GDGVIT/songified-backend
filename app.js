@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const searchRoute = require('./api/routes/search')
 const authRoute = require('./api/routes/auth-routes')
+const songbookRoute = require('./api/routes/songbook')
 /* eslint-disable */
 const passportSetup = require('./config/passport-setup')
 /* eslint-enable */
@@ -36,6 +37,7 @@ mongoose.connect(process.env.MONGODB_DB_URI, { useUnifiedTopology: true, useNewU
 
 app.use('/auth', authRoute)
 app.use('/search', searchRoute)
+app.use('/songbook', songbookRoute)
 
 // adding required headers to prevent CORS(Cross Origin Resourse Sharin) Error
 app.use((req, res, next) => {
