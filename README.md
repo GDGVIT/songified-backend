@@ -22,7 +22,8 @@
 - [X]   Enter User Info About Songs to Database (Sign In Required)
 - [X]   Admin Verification of User Info (Sign In Required)
 - [X]   Adding Points on Successful Verification (Sign In Required)
-- [ ]   Show Additional info if exists of song searched (Sign In Not Required)
+- [X]   Show Additional info if exists of song searched (Sign In Not Required)
+- [ ]   Check if Admin in Admin Routes
 
 <br>
 

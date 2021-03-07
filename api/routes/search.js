@@ -1,6 +1,7 @@
 const express = require('express')
 const https = require('https')
 const router = express.Router()
+const SongInfo = require('../../models/songInfo-model')
 const getBpmBaseUrlSearch = 'https://api.getsongbpm.com/search/?api_key='
 const getBpmBaseUrlSong = 'https://api.getsongbpm.com/song/?api_key='
 
@@ -41,14 +42,26 @@ router.post('/songAndArtist', (req, res) => {
       const songTempo = song.tempo
       const songKey = song.key_of
       const songTimeSig = song.time_sig
-      res.status(200).json({
-        details:
-                    {
-                      song_tempo: songTempo,
-                      song_key: songKey,
-                      song_time_sig: songTimeSig
-                    }
-      })
+
+      SongInfo.find({ songName: req.body.song_name.toString().toLowerCase() })
+        .then((info) => {
+          const data = []
+          for (let i = 0; i < info.length; i++) {
+            if (info[i].verified) {
+              data.push(info[i].detail)
+            }
+          }
+
+          res.status(200).json({
+            details:
+                        {
+                          song_tempo: songTempo,
+                          song_key: songKey,
+                          song_time_sig: songTimeSig
+                        },
+            userComments: data
+          })
+        })
     })
   })
 })
@@ -104,15 +117,26 @@ router.post('/song', (req, res) => {
           const songTimeSig = allDetails.time_sig
           const songKey = allDetails.key_of
 
-          res.status(200).json({
-            details:
-                        {
-                          artist: songArtist,
-                          song_tempo: songTempo,
-                          song_key: songKey,
-                          song_time_sig: songTimeSig
-                        }
-          })
+          SongInfo.find({ songName: req.body.song_name.toString().toLowerCase() })
+            .then((infoSong) => {
+              const data = []
+              for (let i = 0; i < infoSong.length; i++) {
+                if (infoSong[i].verified) {
+                  data.push(infoSong[i].detail)
+                }
+              }
+
+              res.status(200).json({
+                details:
+                            {
+                              artist: songArtist,
+                              song_tempo: songTempo,
+                              song_key: songKey,
+                              song_time_sig: songTimeSig
+                            },
+                userComments: data
+              })
+            })
         })
       })
     })
