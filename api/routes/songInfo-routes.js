@@ -28,51 +28,63 @@ router.get('/', authCheck, (req, res) => {
 })
 
 router.post('/authenticate', authCheck, (req, res) => {
-  SongInfo.findOne({ _id: req.body.id }).then((songInfo) => {
-    if (songInfo.verified) {
-      return res.status(200).json({
-        Message: 'Already Verified'
-      })
-    }
-    SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: true } })
-      .then((verified) => {
-        User.findOne({ googleId: songInfo.userId })
-          .then((user) => {
-            let points = user.points
-            points += 10
-            User.updateOne({ googleId: songInfo.userId }, { $set: { points: points } })
-              .then((updated) => {
-                res.status(200).json({
-                  Message: 'Verified Successfully'
+  if (req.user.username === 'admin songified') {
+    SongInfo.findOne({ _id: req.body.id }).then((songInfo) => {
+      if (songInfo.verified) {
+        return res.status(200).json({
+          Message: 'Already Verified'
+        })
+      }
+      SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: true } })
+        .then((verified) => {
+          User.findOne({ googleId: songInfo.userId })
+            .then((user) => {
+              let points = user.points
+              points += 10
+              User.updateOne({ googleId: songInfo.userId }, { $set: { points: points } })
+                .then((updated) => {
+                  res.status(200).json({
+                    Message: 'Verified Successfully'
+                  })
                 })
-              })
-          })
-      })
-  })
+            })
+        })
+    })
+  } else {
+    res.status(400).json({
+      message: 'Unauthorized Access Prevented'
+    })
+  }
 })
 
 router.post('/deauthenticate', authCheck, (req, res) => {
-  SongInfo.findOne({ _id: req.body.id }).then((unverifySongInfo) => {
-    if (!unverifySongInfo.verified) {
-      return res.status(200).json({
-        Message: 'Already Unverified'
-      })
-    }
-    SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: false } })
-      .then((unverified) => {
-        User.findOne({ googleId: unverifySongInfo.userId })
-          .then((userUnverified) => {
-            let points = userUnverified.points
-            points -= 10
-            User.updateOne({ googleId: unverifySongInfo.userId }, { $set: { points: points } })
-              .then((updatedUnverify) => {
-                res.status(200).json({
-                  Message: 'Unverified Successfully'
+  if (req.user.username === 'admin songified') {
+    SongInfo.findOne({ _id: req.body.id }).then((unverifySongInfo) => {
+      if (!unverifySongInfo.verified) {
+        return res.status(200).json({
+          Message: 'Already Unverified'
+        })
+      }
+      SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: false } })
+        .then((unverified) => {
+          User.findOne({ googleId: unverifySongInfo.userId })
+            .then((userUnverified) => {
+              let points = userUnverified.points
+              points -= 10
+              User.updateOne({ googleId: unverifySongInfo.userId }, { $set: { points: points } })
+                .then((updatedUnverify) => {
+                  res.status(200).json({
+                    Message: 'Unverified Successfully'
+                  })
                 })
-              })
-          })
-      })
-  })
+            })
+        })
+    })
+  } else {
+    res.status(400).json({
+      message: 'Unauthorized Access Prevented'
+    })
+  }
 })
 
 module.exports = router

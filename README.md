@@ -23,7 +23,7 @@
 - [X]   Admin Verification of User Info (Sign In Required)
 - [X]   Adding Points on Successful Verification (Sign In Required)
 - [X]   Show Additional info if exists of song searched (Sign In Not Required)
-- [ ]   Check if Admin in Admin Routes
+- [X]   Check if Admin in Admin Routes
 
 <br>
 
