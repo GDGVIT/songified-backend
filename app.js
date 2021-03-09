@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const searchRoute = require('./api/routes/search')
 const authRoute = require('./api/routes/auth-routes')
 const songInfoRoute = require('./api/routes/songInfo-routes')
+const userInfoRoute = require('./api/routes/userInfo-routes')
 const songbookRoute = require('./api/routes/songbook')
 /* eslint-disable */
 const passportSetup = require('./config/passport-setup')
@@ -40,6 +41,7 @@ app.use('/auth', authRoute)
 app.use('/search', searchRoute)
 app.use('/songbook', songbookRoute)
 app.use('/songInfo', songInfoRoute)
+app.use('/userInfo', userInfoRoute)
 
 // adding required headers to prevent CORS(Cross Origin Resourse Sharin) Error
 app.use((req, res, next) => {
