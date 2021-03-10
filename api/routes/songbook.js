@@ -6,13 +6,13 @@ const uuid4 = require('uuid4')
 router.post('/addSong', authCheck, (req, res) => {
   if (!req.body.title) {
     return res.status(400).json({
-      error: 'missing required parameters. refer documentation'
+      erroMessage: 'missing required parameters. refer documentation'
     })
   }
 
   if (!req.body.body) {
     return res.status(400).json({
-      error: 'missing required parameters. refer documentation'
+      errorMessage: 'missing required parameters. refer documentation'
     })
   }
 
@@ -44,13 +44,13 @@ router.patch('/updateSong', authCheck, (req, res) => {
 
   if (!req.body.body) {
     return res.status(400).json({
-      error: 'missing required parameters. refer documentation'
+      errorMessage: 'missing required parameters. refer documentation'
     })
   }
 
   if (!req.body.songId) {
     return res.status(400).json({
-      error: 'missing required parameters. refer documentation'
+      errorMessage: 'missing required parameters. refer documentation'
     })
   }
 

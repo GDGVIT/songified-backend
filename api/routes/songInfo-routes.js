@@ -4,6 +4,18 @@ const SongInfo = require('../../models/songInfo-model')
 const User = require('../../models/user-model')
 
 router.post('/', authCheck, (req, res) => {
+  if (!req.body.songName) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
+  if (!req.body.detail) {
+    return res.status(400).json({
+      errorMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
   new SongInfo({
     userId: req.user.googleId,
     name: req.user.username,
@@ -29,6 +41,12 @@ router.get('/', authCheck, (req, res) => {
 
 router.post('/authenticate', authCheck, (req, res) => {
   if (req.user.username === 'admin songified') {
+    if (!req.body.id) {
+      return res.status(400).json({
+        errorMessage: 'missing required parameters. refer documentation'
+      })
+    }
+
     SongInfo.findOne({ _id: req.body.id }).then((songInfo) => {
       if (songInfo.verified) {
         return res.status(200).json({
@@ -59,6 +77,12 @@ router.post('/authenticate', authCheck, (req, res) => {
 
 router.post('/deauthenticate', authCheck, (req, res) => {
   if (req.user.username === 'admin songified') {
+    if (!req.body.id) {
+      return res.status(400).json({
+        error: 'missing required parameters. refer documentation'
+      })
+    }
+
     SongInfo.findOne({ _id: req.body.id }).then((unverifySongInfo) => {
       if (!unverifySongInfo.verified) {
         return res.status(200).json({
