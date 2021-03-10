@@ -2,7 +2,7 @@ const router = require('express').Router()
 const passport = require('passport')
 
 router.get('/logout', (req, res) => {
-  res.logout()
+  req.logout()
   res.status(200).json({
     message: 'logout successful'
   })
