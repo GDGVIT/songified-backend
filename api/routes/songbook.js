@@ -4,6 +4,18 @@ const Songbook = require('../../models/songbook-model')
 const uuid4 = require('uuid4')
 
 router.post('/addSong', authCheck, (req, res) => {
+  if (!req.body.title) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
+  if (!req.body.body) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
   Songbook.findOne({ songbookId: req.user.songbookId })
     .then((songbook) => {
       const ourdata = songbook.data
@@ -24,6 +36,24 @@ router.post('/addSong', authCheck, (req, res) => {
 })
 
 router.patch('/updateSong', authCheck, (req, res) => {
+  if (!req.body.title) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
+  if (!req.body.body) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
+  if (!req.body.songId) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
   Songbook.findOne({ songbookId: req.user.songbookId })
     .then((songbookData) => {
       const ourdata = songbookData.data
@@ -44,6 +74,12 @@ router.patch('/updateSong', authCheck, (req, res) => {
 })
 
 router.delete('/deleteSong', authCheck, (req, res) => {
+  if (!req.body.song_id) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
   Songbook.findOne({ songbookId: req.user.songbookId })
     .then((songbook) => {
       const ourdataDelete = songbook.data
