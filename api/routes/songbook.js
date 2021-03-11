@@ -74,7 +74,7 @@ router.patch('/updateSong', authCheck, (req, res) => {
 })
 
 router.delete('/deleteSong', authCheck, (req, res) => {
-  if (!req.body.song_id) {
+  if (!req.body.songId) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
     })
