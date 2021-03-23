@@ -5,7 +5,10 @@ router.get('/', (req, res) => {
 })
 
 router.post('/cyaniteWebHook', (req, res) => {
-  res.json(req);
+  console.log(req)
+  res.json({
+    'Test Accessed': 'Accessed'
+  })
 })
 
 module.exports = router
