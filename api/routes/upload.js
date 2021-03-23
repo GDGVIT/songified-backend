@@ -5,7 +5,7 @@ router.get('/', (req, res) => {
 })
 
 router.post('/cyaniteWebHook', (req, res) => {
-  console.log(req)
+  console.log(req.body)
   res.json({
     'Test Accessed': 'Accessed'
   })
