@@ -1,79 +1,66 @@
 const router = require('express').Router()
-const https = require('https')
+const axios = require('axios')
 
-router.get('/', (req1, res1) => {
-  const options = {
-    method: 'POST',
-    hostname: 'app.cyanite.ai',
-    path: '/graphql',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + process.env.CYANITE_ACCESS_TOKEN
-    }
-  }
-
-  const req = https.request(options, (res) => {
-    const chunks = []
-
-    res.on('data', (chunk) => {
-      chunks.push(chunk)
-    })
-
-    res.on('end', (chunk) => {
-      const body = Buffer.concat(chunks)
-      console.log(body.toString())
-      res1.status(200).json(JSON.parse(body.toString()))
-    })
-
-    res.on('error', (error) => {
-      console.error(error)
-    })
-  })
-
-  const postData = JSON.stringify({
+router.get('/', (req, res) => {
+  const data = JSON.stringify({
     query: `query analysis($id: ID!) {
-  inDepthAnalysis(recordId: $id) {
-    __typename
-    ... on Error {
-      message
-    }
-    ... on InDepthAnalysis {
-      id
-      title
-      fullScaleMusicalAnalysis {
+      inDepthAnalysis(recordId: $id) {
         __typename
-        ... on FullScaleMusicalAnalysisFailed {
-          error {
-            __typename
-            ... on Error {
-              message
-            }
-          }
+        ... on Error {
+          message
         }
-        ... on FullScaleMusicalAnalysisFinished {
-          result {
-            bpm
-            key {
-              values
-              confidences
+        ... on InDepthAnalysis {
+          id
+          title
+          fullScaleMusicalAnalysis {
+            __typename
+            ... on FullScaleMusicalAnalysisFailed {
+              error {
+                __typename
+                ... on Error {
+                  message
+                }
+              }
+            }
+            ... on FullScaleMusicalAnalysisFinished {
+              result {
+                bpm
+                key {
+                  values
+                  confidences
+                }
+              }
             }
           }
         }
       }
-    }
-  }
-}`,
+    }`,
     variables: { id: 1294396 }
   })
 
-  req.write(postData)
+  const config = {
+    method: 'post',
+    url: 'https://app.cyanite.ai/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + process.env.CYANITE_ACCESS_TOKEN
+    },
+    data: data
+  }
 
-  req.end()
+  axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data))
+      res.status(200).json(response.headers)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
 })
 
 router.post('/cyaniteWebHook', (req, res) => {
   console.log(req.body)
-  res.json({
+  res.status(200).json({
     'Test Accessed': 'Accessed'
   })
 })
