@@ -31,16 +31,39 @@ router.get('/', (req1, res1) => {
   })
 
   const postData = JSON.stringify({
-    query: `query LibraryTracksQuery {
-                libraryTracks(first: 10) {
-                  edges {
-                    node {
-                      id
-                    }
-                  }
-                }
-              }`,
-    variables: {}
+    query: `query analysis($id: ID!) {
+  inDepthAnalysis(recordId: $id) {
+    __typename
+    ... on Error {
+      message
+    }
+    ... on InDepthAnalysis {
+      id
+      title
+      fullScaleMusicalAnalysis {
+        __typename
+        ... on FullScaleMusicalAnalysisFailed {
+          error {
+            __typename
+            ... on Error {
+              message
+            }
+          }
+        }
+        ... on FullScaleMusicalAnalysisFinished {
+          result {
+            bpm
+            key {
+              values
+              confidences
+            }
+          }
+        }
+      }
+    }
+  }
+}`,
+    variables: { id: 1294396 }
   })
 
   req.write(postData)
