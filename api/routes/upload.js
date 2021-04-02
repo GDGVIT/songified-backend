@@ -65,4 +65,40 @@ router.post('/cyaniteWebHook', (req, res) => {
   })
 })
 
+router.post('/song', (req, res) => {
+  // Step 1: Request File Upload
+  const data = JSON.stringify({
+    query: `mutation FileUploadRequestMutation {
+      fileUploadRequest {
+        # the id will be used for creating the library track from the file upload
+        id
+        # the uploadUrl specifies where we need to upload the file to
+        uploadUrl
+      }
+    }`,
+    variables: {}
+  })
+
+  const config = {
+    method: 'post',
+    url: 'https://app.cyanite.ai/graphql',
+    headers: {
+      Authorization: 'Bearer ' + process.env.CYANITE_ACCESS_TOKEN,
+      'Content-Type': 'application/json'
+    },
+    data: data
+  }
+
+  axios(config)
+    .then(function (response) {
+      res.status(200).json({
+        id: response.data.data.fileUploadRequest.id,
+        uploadUrl: response.data.data.fileUploadRequest.uploadUrl
+      })
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+})
+
 module.exports = router
