@@ -1,5 +1,10 @@
 const router = require('express').Router()
+const multer = require('multer')
+const Readable = require('stream').Readable
 const axios = require('axios')
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 router.get('/', (req, res) => {
   const data = JSON.stringify({
@@ -65,8 +70,14 @@ router.post('/cyaniteWebHook', (req, res) => {
   })
 })
 
-router.post('/song', (req, res) => {
-  // Step 1: Request File Upload
+router.post('/song', upload.single('songFile'), (req, res) => {
+  // Step 1: Get File as multipart form data with name songFile
+  const readable = new Readable()
+  readable._read = () => {}
+  readable.push(req.file.buffer)
+  readable.push(null)
+
+  // Step 2: Request File Upload
   const data = JSON.stringify({
     query: `mutation FileUploadRequestMutation {
       fileUploadRequest {
@@ -91,10 +102,11 @@ router.post('/song', (req, res) => {
 
   axios(config)
     .then(function (response) {
-      res.status(200).json({
-        id: response.data.data.fileUploadRequest.id,
-        uploadUrl: response.data.data.fileUploadRequest.uploadUrl
-      })
+      const uploadUrl = response.data.data.fileUploadRequest.uploadUrl
+      const uploadId = response.data.data.fileUploadRequest.id
+      const fileName = uploadId + '-songFile.mp3'
+      console.log(uploadUrl, fileName)
+      // Step 3: Upload the file
     })
     .catch(function (error) {
       console.log(error)
