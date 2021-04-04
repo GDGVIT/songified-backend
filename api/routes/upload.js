@@ -2,9 +2,22 @@ const router = require('express').Router()
 const multer = require('multer')
 const Readable = require('stream').Readable
 const axios = require('axios')
+const crypto = require('crypto')
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
+
+const isSignatureValid = function verifySignature (
+  secret /* Secret specified on Cyanite.ai */,
+  signature /* Signature sent via the Signature header */,
+  body /* raw request body */
+) {
+  const hmac = crypto.createHmac('sha512', secret)
+  hmac.write(body)
+  hmac.end()
+  const compareSignature = hmac.read().toString('hex')
+  return signature === compareSignature
+}
 
 // @TODO Remove this
 router.get('/', (req, res) => {
@@ -65,10 +78,32 @@ router.get('/', (req, res) => {
 })
 
 router.post('/cyaniteWebHook', (req, res) => {
-  console.log(req.body)
-  res.status(200).json({
-    'Test Accessed': 'Accessed'
-  })
+  if (!req.body) {
+    return res.sendStatus(422) // Unprocessable Entity
+  }
+
+  console.log('[info] incoming event:')
+  console.log(JSON.stringify(req.body, undefined, 2))
+
+  if (req.body.type === 'TEST') {
+    console.log('[info] processing test event')
+    return res.sendStatus(200)
+  }
+
+  if (!isSignatureValid(process.env.CYANITE_WEBHOOK_SECRET, req.headers.signature, JSON.stringify(req.body))) {
+    console.log('[info] signature is invalid')
+    return res.sendStatus(400)
+  }
+  console.log('[info] signature is valid')
+
+  if (req.body.type === 'IN_DEPTH_ANALYSIS') {
+    console.log('[info] processing finish event')
+
+    // You can use the result here, but keep in mind that you should probably process the result asynchronously
+    // The request of the incoming webhook will be canceled after 3 seconds.
+  }
+
+  return res.sendStatus(200)
 })
 
 router.post('/song', upload.single('songFile'), (req, res) => {
@@ -165,6 +200,13 @@ router.post('/song', upload.single('songFile'), (req, res) => {
             .then(function (responseLibrary) {
               console.log(responseLibrary.data)
               console.log('Id of file to query: ' + responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
+
+              // @TODO Send Data of id and status processing to mongodb
+
+              res.status(200).json({
+                message: 'file is being processed. Id to query for analysis result is given in Id',
+                id: responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id
+              })
             })
             .catch(function (error) {
               console.log(error)
