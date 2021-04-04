@@ -99,7 +99,10 @@ router.post('/cyaniteWebHook', (req, res) => {
   if (req.body.type === 'IN_DEPTH_ANALYSIS' && req.body.event.type === 'FULL_SCALE_MUSICAL_ANALYSIS' && req.body.event.status === 'FINISHED') {
     console.log('[info] processing finish event')
     console.log(req.body.type)
-    console.log('ID:'+req.body.id)
+    console.log('ID:' + req.body.id)
+
+    // @TODO UPLOAD TO MONGO DB
+    // NOTE: YOU NEED TO PUSH TO HEROKU TO TEST THE WEBHOOK
 
     // You can use the result here, but keep in mind that you should probably process the result asynchronously
     // The request of the incoming webhook will be canceled after 3 seconds.
@@ -202,8 +205,6 @@ router.post('/song', upload.single('songFile'), (req, res) => {
             .then(function (responseLibrary) {
               console.log(responseLibrary.data)
               console.log('Id of file to query: ' + responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
-
-              // @TODO Send Data of id and status processing to mongodb
 
               res.status(200).json({
                 message: 'file is being processed. Id to query for analysis result is given in Id',
