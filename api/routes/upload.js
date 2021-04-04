@@ -96,7 +96,7 @@ router.post('/cyaniteWebHook', (req, res) => {
   }
   console.log('[info] signature is valid')
 
-  if (req.body.type === 'IN_DEPTH_ANALYSIS') {
+  if (req.body.type === 'IN_DEPTH_ANALYSIS' && req.body.event.type === 'FULL_SCALE_MUSICAL_ANALYSIS' && req.body.event.status === 'FINISHED') {
     console.log('[info] processing finish event')
     console.log(req.body.type)
     console.log('ID:'+req.body.id)
