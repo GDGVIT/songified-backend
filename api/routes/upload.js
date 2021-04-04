@@ -98,6 +98,8 @@ router.post('/cyaniteWebHook', (req, res) => {
 
   if (req.body.type === 'IN_DEPTH_ANALYSIS') {
     console.log('[info] processing finish event')
+    console.log(req.body.type)
+    console.log('ID:'+req.body.id)
 
     // You can use the result here, but keep in mind that you should probably process the result asynchronously
     // The request of the incoming webhook will be canceled after 3 seconds.
