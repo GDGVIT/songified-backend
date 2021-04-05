@@ -313,4 +313,28 @@ router.post('/song', upload.single('songFile'), (req, res) => {
     })
 })
 
+router.post('/getAnalysedData', (req, res) => {
+  if (!req.body.songId) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Analysis.findOne({ songId: req.body.songId })
+    .then((songData) => {
+      if (songData.status === 'Finished') {
+        res.status(200).json(songData)
+      } else {
+        res.status(200).json({
+          message: 'Processing Underway please check back after a while'
+        })
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error
+      })
+    })
+})
+
 module.exports = router
