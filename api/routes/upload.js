@@ -96,7 +96,6 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
     })
 }
 
-// @TODO Remove this
 router.get('/', (req, res) => {
   res.status(200).json({
     message: 'refer documentation'
@@ -127,7 +126,6 @@ router.post('/cyaniteWebHook', (req, res) => {
     console.log(req.body.type)
     console.log('ID:' + req.body.id)
 
-    // @TODO UPLOAD TO MONGO DB
     // NOTE: YOU NEED TO PUSH TO HEROKU TO TEST THE WEBHOOK
 
     // You can use the result here, but keep in mind that you should probably process the result asynchronously
