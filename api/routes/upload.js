@@ -82,7 +82,7 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
       const updateData = response.data.data.libraryTrack.fullScaleMusicalAnalysis
 
       await Analysis.updateOne({ songId: songId },
-        { $set: { data: updateData } })
+        { $set: { data: updateData, status: 'Finished' } })
         .then((update) => {
           console.log('Successful Update Analysis Data')
         })
