@@ -3,6 +3,7 @@ const multer = require('multer')
 const Readable = require('stream').Readable
 const axios = require('axios')
 const crypto = require('crypto')
+const Analysis = require('../../models/analysis-model')
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
@@ -17,6 +18,82 @@ const isSignatureValid = function verifySignature (
   hmac.end()
   const compareSignature = hmac.read().toString('hex')
   return signature === compareSignature
+}
+
+const analysisData = async function analysisData (songId) {
+  const analysis = new Analysis({
+    songId: songId
+  })
+
+  await analysis.save().then((analysis) => {
+    console.log('Added to Analysis DB')
+  })
+    .catch((error) => {
+      console.log('ERROR:' + error)
+    })
+}
+
+const updateAnalysisData = async function updateAnalysisData (songId) {
+  const data = JSON.stringify({
+    query: `query LibraryTrackMusicalAnalysisQuery($libraryTrackId: ID!) {
+      libraryTrack(id: $libraryTrackId) {
+        __typename
+        ... on LibraryTrackNotFoundError {
+          message
+        }
+        ... on LibraryTrack {
+          id
+          fullScaleMusicalAnalysis {
+            __typename
+            ... on FullScaleMusicalAnalysisFailed {
+              error {
+                ... on Error {
+                  message
+                }
+              }
+            }
+            ... on FullScaleMusicalAnalysisFinished {
+              result {
+                bpm
+                key {
+                  values
+                  confidences
+                }
+              }
+            }
+          }
+        }
+      }
+    }`,
+    variables: { libraryTrackId: songId }
+  })
+  const config = {
+    method: 'post',
+    url: 'https://app.cyanite.ai/graphql',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + process.env.CYANITE_ACCESS_TOKEN
+    },
+    data: data
+  }
+
+  axios(config)
+    .then(async function (response) {
+      const updateData = response.data.data.libraryTrack.fullScaleMusicalAnalysis
+
+      await Analysis.updateOne({ songId: songId },
+        { $set: { data: updateData } })
+        .then((update) => {
+          console.log('Successful Update Analysis Data')
+        })
+        .catch((error) => {
+          console.log('ERROR:' + error)
+        })
+    })
+    .catch(function (error) {
+      console.log('Analysis Fetch Error')
+      console.log(error)
+    })
 }
 
 // @TODO Remove this
@@ -106,6 +183,7 @@ router.post('/cyaniteWebHook', (req, res) => {
 
     // You can use the result here, but keep in mind that you should probably process the result asynchronously
     // The request of the incoming webhook will be canceled after 3 seconds.
+    updateAnalysisData(req.body.id)
   }
 
   return res.sendStatus(200)
@@ -205,6 +283,8 @@ router.post('/song', upload.single('songFile'), (req, res) => {
             .then(function (responseLibrary) {
               console.log(responseLibrary.data)
               console.log('Id of file to query: ' + responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
+
+              analysisData(responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
 
               res.status(200).json({
                 message: 'file is being processed. Id to query for analysis result is given in Id',
