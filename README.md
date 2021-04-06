@@ -5,7 +5,7 @@
 	<h2 align="center"> Songified  </h2>
 	<h4 align="center"> Simplifying Getting Song Information <h4>
 	<a href="https://cyanite.ai/">
-	<img src="https://cyanite.ai/wp-content/uploads/2019/08/CyaniteWebsite1.png" alt="Cyanite AI"/>
+	<img src="https://cyanite.ai/wp-content/uploads/2019/08/CyaniteWebsite1.png" width="100"alt="Cyanite AI"/>
 	</a>
 	<h4 align="center"> Powered By Cyanite API <h4>
 </p>
