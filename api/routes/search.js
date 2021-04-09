@@ -20,7 +20,7 @@ router.post('/songAndArtist', (req, res) => {
 
   const songName = req.body.song_name.split(' ').join('+')
   const artist = req.body.artist.split(' ').join('+')
-  const url = getBpmBaseUrlSearch + process.env.API_KEY + '&type=both&lookup=song:' + songName + ' artist:' + artist
+  const url = getBpmBaseUrlSearch + process.env.API_KEY + '&type=both&lookup=song:' + songName + 'artist:' + artist
 
   https.get(url, (response) => {
     console.log(response.statusCode)
