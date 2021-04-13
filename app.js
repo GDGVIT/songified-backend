@@ -8,16 +8,11 @@ const userInfoRoute = require('./api/routes/userInfo-routes')
 const songbookRoute = require('./api/routes/songbook')
 const uploadRoute = require('./api/routes/upload')
 const mongoose = require('mongoose')
-const cookieSession = require('cookie-session')
 
 const app = express()
 
 const port = process.env.PORT || 3000
 
-app.use(cookieSession({
-  maxAge: 24 * 60 * 60 * 1000,
-  keys: [process.env.COOKIE_KEY]
-}))
 
 app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))
