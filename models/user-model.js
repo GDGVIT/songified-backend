@@ -7,7 +7,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  googleId: {
+  thumbnail: {
     type: String,
     required: true
   },
@@ -16,6 +16,10 @@ const userSchema = new Schema({
   },
   songbookId: {
     type: String
+  },
+  email: {
+    type: String,
+    required: true
   }
 })
 

@@ -1,25 +1,90 @@
 const router = require('express').Router()
-const passport = require('passport')
+const admin = require('firebase-admin')
+const User = require('../../models/user-model')
+const Songbook = require('../../models/songbook-model')
+const uuid4 = require('uuid4')
+const jwt = require('jsonwebtoken')
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault()
+})
 
 router.get('/logout', (req, res) => {
-  req.logout()
   res.status(200).json({
     message: 'logout successful'
   })
 })
 
-router.get('/google', passport.authenticate('google', {
-  scope: ['profile']
-}))
+router.post('/login', (req, res) => {
+  if (!req.body.idToken) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+  // idToken comes from the client app
+  admin
+    .auth()
+    .verifyIdToken(req.body.idToken.toString())
+    .then((decodedToken) => {
+      User.findOne({ email: decodedToken.email })
+        .then((currentUser) => {
+          if (currentUser) {
+            const token = jwt.sign({ _id: currentUser._id, name: currentUser.username, email: decodedToken.email, points: currentUser.points, thumbnail: currentUser.thumbnail, songbookId: currentUser.songbookId }, process.env.TOKEN_SECRET)
 
-router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-  res.status(200).json({
-    message: 'login succesful, cookie created',
-    data: {
-      name: req.user.username,
-      points: req.user.points
-    }
-  })
+            return res.status(200).json({
+              success: true,
+              authToken: token
+            })
+          } else {
+            const id = uuid4()
+            new User({
+              username: decodedToken.name,
+              thumbnail: decodedToken.picture,
+              email: decodedToken.email,
+              points: 0,
+              songbookId: id.toString()
+            })
+              .save()
+              .then((newUser) => {
+                new Songbook({
+                  songbookId: id.toString()
+                })
+                  .save()
+                  .then((newSongbook) => {
+                    const token = jwt.sign({ _id: newUser._id, name: newUser.username, email: newUser.email, points: newUser.points, thumbnail: newUser.thumbnail, songbookId: newUser.songbookId }, process.env.TOKEN_SECRET)
+
+                    return res.status(200).json({
+                      success: true,
+                      authToken: token
+                    })
+                  })
+              })
+              .catch((error) => {
+                // Handle error
+                return res.status(400).json({
+                  success: false,
+                  err: error
+                })
+              })
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          return res.status(400).json({
+            success: false,
+            err: error
+          })
+        })
+
+      // ...
+    })
+    .catch((error) => {
+      // Handle error
+      return res.status(400).json({
+        success: false,
+        err: error
+      })
+    })
 })
 
 module.exports = router

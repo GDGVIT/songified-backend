@@ -32,6 +32,7 @@ router.post('/songAndArtist', (req, res) => {
     })
 
     response.on('end', () => {
+      console.log(body)
       const songData = JSON.parse(body)
       if (songData.search.error) {
         return res.status(200).json({

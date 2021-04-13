@@ -1,9 +1,9 @@
 const router = require('express').Router()
-const authCheck = require('./authCheck')
+const verifyToken = require('../middleware/verifyToken')
 const Songbook = require('../../models/songbook-model')
 const uuid4 = require('uuid4')
 
-router.post('/addSong', authCheck, (req, res) => {
+router.post('/addSong', verifyToken, (req, res) => {
   if (!req.body.title) {
     return res.status(400).json({
       erroMessage: 'missing required parameters. refer documentation'
@@ -35,7 +35,7 @@ router.post('/addSong', authCheck, (req, res) => {
     })
 })
 
-router.patch('/updateSong', authCheck, (req, res) => {
+router.patch('/updateSong', verifyToken, (req, res) => {
   if (!req.body.title) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
@@ -73,7 +73,7 @@ router.patch('/updateSong', authCheck, (req, res) => {
     })
 })
 
-router.delete('/deleteSong', authCheck, (req, res) => {
+router.delete('/deleteSong', verifyToken, (req, res) => {
   if (!req.body.songId) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
@@ -98,7 +98,7 @@ router.delete('/deleteSong', authCheck, (req, res) => {
     })
 })
 
-router.get('/', authCheck, (req, res) => {
+router.get('/', verifyToken, (req, res) => {
   Songbook.findOne({ songbookId: req.user.songbookId })
     .then((songbook) => {
       res.status(200).json({

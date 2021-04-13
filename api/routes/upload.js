@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const multer = require('multer')
-const authCheck = require('./authCheck')
+// const authCheck = require('./authCheck')
 const Readable = require('stream').Readable
+const verifyToken = require('../middleware/verifyToken')
 const axios = require('axios')
 const crypto = require('crypto')
 const Analysis = require('../../models/analysis-model')
@@ -137,7 +138,9 @@ router.post('/cyaniteWebHook', (req, res) => {
   return res.sendStatus(200)
 })
 
-router.post('/song', authCheck, upload.single('songFile'), (req, res) => {
+// @TODO Add Auth Check
+
+router.post('/song', verifyToken, upload.single('songFile'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({
       errorMessage: 'missing required file. refer documentation'
@@ -261,7 +264,9 @@ router.post('/song', authCheck, upload.single('songFile'), (req, res) => {
     })
 })
 
-router.post('/getAnalysedData', authCheck, (req, res) => {
+// @TODO Add Auth Check
+
+router.post('/getAnalysedData', verifyToken, (req, res) => {
   if (!req.body.songId) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'

@@ -33,13 +33,11 @@
 
 ## Dependencies
  - express
- - body-parser
  - dotenv
  - morgan
  - mongoose
- - cookie-session
- - passport
- - passport-google-oauth20
+ - jsonwebtoken
+ - firebase-admin 
  - uuid4
  - axios
  - multer
@@ -48,7 +46,7 @@
 ## Running
 
 
-< directions to install >
+< directions to install>
 ```bash
 < insert code >
 ```
