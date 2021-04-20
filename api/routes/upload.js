@@ -45,6 +45,27 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
         }
         ... on LibraryTrack {
           id
+          audioAnalysisV6 {
+              # if enqueued typename should be AudioAnalysisV6Enqueued
+              __typename
+             ... on AudioAnalysisV6Failed {
+              error {
+                ... on Error {
+                  message
+                }
+              }
+            }
+            ... on AudioAnalysisV6Finished {
+             result{
+              energyLevel
+              genreTags
+              moodTags
+              emotionalProfile
+              musicalEraTag
+            }
+
+            }
+            }
           fullScaleMusicalAnalysis {
             __typename
             ... on FullScaleMusicalAnalysisFailed {
@@ -81,7 +102,12 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
 
   axios(config)
     .then(async function (response) {
-      const updateData = response.data.data.libraryTrack.fullScaleMusicalAnalysis
+      const updateData1 = response.data.data.libraryTrack.fullScaleMusicalAnalysis
+      const updateData2 = response.data.data.libraryTrack.audioAnalysisV6
+      const updateData = {
+        audioAnalysis: updateData2,
+        fullScaleAnalysis: updateData1
+      }
 
       await Analysis.updateOne({ songId: songId },
         { $set: { data: updateData, status: 'Finished' } })
