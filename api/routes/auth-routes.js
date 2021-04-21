@@ -42,7 +42,7 @@ router.post('/login', (req, res) => {
               thumbnail: decodedToken.picture,
               email: decodedToken.email,
               points: 0,
-              songbookId: id.toString()
+              songbookId: [id.toString()]
             })
               .save()
               .then((newUser) => {

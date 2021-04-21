@@ -15,7 +15,8 @@ const userSchema = new Schema({
     type: Number
   },
   songbookId: {
-    type: String
+    type: Array,
+    default: []
   },
   email: {
     type: String,

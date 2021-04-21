@@ -2,6 +2,49 @@ const router = require('express').Router()
 const verifyToken = require('../middleware/verifyToken')
 const Songbook = require('../../models/songbook-model')
 const uuid4 = require('uuid4')
+const User = require('../../models/user-model')
+
+router.post('/create', verifyToken, (req, res) => {
+  const id = uuid4()
+  new Songbook({
+    songbookId: id.toString()
+  })
+    .save()
+    .then((newSongbook) => {
+      User.findOne({ email: req.user.email })
+        .then((currentUser) => {
+          const songbook = currentUser.songbookId
+          songbook.push(id.toString())
+          User.updateOne({ email: req.user.email }, { $set: { songbookId: songbook } })
+            .then((update) => {
+              res.status(200).json({
+                message: 'songbook created'
+              })
+            })
+            .catch((error) => {
+            // Handle error
+              return res.status(400).json({
+                success: false,
+                err: error
+              })
+            })
+        })
+        .catch((error) => {
+          // Handle error
+          return res.status(400).json({
+            success: false,
+            err: error
+          })
+        })
+    })
+    .catch((error) => {
+      // Handle error
+      return res.status(400).json({
+        success: false,
+        err: error
+      })
+    })
+})
 
 router.post('/addSong', verifyToken, (req, res) => {
   if (!req.body.title) {
@@ -16,7 +59,13 @@ router.post('/addSong', verifyToken, (req, res) => {
     })
   }
 
-  Songbook.findOne({ songbookId: req.user.songbookId })
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      errorMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Songbook.findOne({ songbookId: req.body.songbookId })
     .then((songbook) => {
       const ourdata = songbook.data
       const newData = {
@@ -25,7 +74,7 @@ router.post('/addSong', verifyToken, (req, res) => {
         body: req.body.body
       }
       ourdata.push(newData)
-      Songbook.updateOne({ songbookId: req.user.songbookId },
+      Songbook.updateOne({ songbookId: req.body.songbookId },
         { $set: { data: ourdata } })
         .then((update) => {
           res.status(200).json({
@@ -42,6 +91,12 @@ router.patch('/updateSong', verifyToken, (req, res) => {
     })
   }
 
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      errorMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
   if (!req.body.body) {
     return res.status(400).json({
       errorMessage: 'missing required parameters. refer documentation'
@@ -54,7 +109,7 @@ router.patch('/updateSong', verifyToken, (req, res) => {
     })
   }
 
-  Songbook.findOne({ songbookId: req.user.songbookId })
+  Songbook.findOne({ songbookId: req.body.songbookId })
     .then((songbookData) => {
       const ourdata = songbookData.data
       for (let i = 0; i < ourdata.length; i++) {
@@ -63,7 +118,7 @@ router.patch('/updateSong', verifyToken, (req, res) => {
           ourdata[i].body = req.body.body
         }
       }
-      Songbook.updateOne({ songbookId: req.user.songbookId },
+      Songbook.updateOne({ songbookId: req.body.songbookId },
         { $set: { data: ourdata } })
         .then((update) => {
           res.status(200).json({
@@ -80,7 +135,13 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
     })
   }
 
-  Songbook.findOne({ songbookId: req.user.songbookId })
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      errorMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Songbook.findOne({ songbookId: req.body.songbookId })
     .then((songbook) => {
       const ourdataDelete = songbook.data
       for (let i = 0; i < ourdataDelete.length; i++) {
@@ -88,7 +149,7 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
           ourdataDelete.splice(i, 1)
         }
       }
-      Songbook.updateOne({ songbookId: req.user.songbookId },
+      Songbook.updateOne({ songbookId: req.body.songbookId },
         { $set: { data: ourdataDelete } })
         .then((deleted) => {
           res.status(200).json({
@@ -99,7 +160,13 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
 })
 
 router.get('/', verifyToken, (req, res) => {
-  Songbook.findOne({ songbookId: req.user.songbookId })
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      errorMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Songbook.findOne({ songbookId: req.body.songbookId })
     .then((songbook) => {
       res.status(200).json({
         message: songbook
