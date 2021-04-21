@@ -10,7 +10,7 @@ const songInfoSchema = new Schema({
     type: String,
     required: true
   },
-  songName: {
+  songId: {
     type: String,
     required: true
   },

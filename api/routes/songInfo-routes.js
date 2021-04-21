@@ -4,7 +4,7 @@ const SongInfo = require('../../models/songInfo-model')
 const User = require('../../models/user-model')
 
 router.post('/', verifyToken, (req, res) => {
-  if (!req.body.songName) {
+  if (!req.body.songId) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
     })
@@ -19,7 +19,7 @@ router.post('/', verifyToken, (req, res) => {
   new SongInfo({
     userId: req.user._id,
     name: req.user.name,
-    songName: req.body.songName.toString().toLowerCase(),
+    songId: req.body.songId,
     detail: req.body.detail
   })
     .save()
