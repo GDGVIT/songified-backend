@@ -14,6 +14,10 @@ const userSchema = new Schema({
   points: {
     type: Number
   },
+  level: {
+    type: Number,
+    default: 1
+  },
   songbookId: {
     type: Array,
     default: []

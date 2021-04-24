@@ -6,6 +6,10 @@ const songbookSchema = new Schema({
     type: String,
     required: true
   },
+  songbookName: {
+    type: String,
+    required: true
+  },
   data: {
     type: Array,
     default: []

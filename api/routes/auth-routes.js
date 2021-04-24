@@ -37,17 +37,22 @@ router.post('/login', (req, res) => {
             })
           } else {
             const id = uuid4()
+            const songbookDataToPush = {
+              id: id.toString(),
+              songbookName: 'Songbook One'
+            }
             new User({
               username: decodedToken.name,
               thumbnail: decodedToken.picture,
               email: decodedToken.email,
               points: 0,
-              songbookId: [id.toString()]
+              songbookId: [songbookDataToPush]
             })
               .save()
               .then((newUser) => {
                 new Songbook({
-                  songbookId: id.toString()
+                  songbookId: id.toString(),
+                  songbookName: 'Songbook One'
                 })
                   .save()
                   .then((newSongbook) => {

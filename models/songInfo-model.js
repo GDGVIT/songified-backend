@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const songInfoSchema = new Schema({
-  userId: {
-    type: String,
+  user: {
+    type: Object,
     required: true
   },
   name: {

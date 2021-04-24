@@ -5,16 +5,27 @@ const uuid4 = require('uuid4')
 const User = require('../../models/user-model')
 
 router.post('/create', verifyToken, (req, res) => {
+  if (!req.body.songbookName) {
+    return res.status(400).json({
+      erroMessage: 'missing required parameters. refer documentation'
+    })
+  }
   const id = uuid4()
   new Songbook({
-    songbookId: id.toString()
+    songbookId: id.toString(),
+    songbookName: req.body.songbookName
   })
     .save()
     .then((newSongbook) => {
       User.findOne({ email: req.user.email })
         .then((currentUser) => {
           const songbook = currentUser.songbookId
-          songbook.push(id.toString())
+          // songbook.push(id.toString())
+          const songbookDataToPush = {
+            id: id.toString(),
+            songbookName: req.body.songbookName
+          }
+          songbook.push(songbookDataToPush)
           User.updateOne({ email: req.user.email }, { $set: { songbookId: songbook } })
             .then((update) => {
               res.status(200).json({
@@ -43,6 +54,39 @@ router.post('/create', verifyToken, (req, res) => {
         success: false,
         err: error
       })
+    })
+})
+
+router.patch('/songbookName', verifyToken, (req, res) => {
+  if (!req.body.songbookName) {
+    return res.status(400).json({
+      erroMessage: 'missing required parameters. refer documentation'
+    })
+  }
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      erroMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Songbook.updateOne({ songbookId: req.body.songbookId },
+    { $set: { songbookName: req.body.songbookName } })
+    .then((update) => {
+      User.findOne({ email: req.user.email })
+        .then((currentUser) => {
+          const songbookData = currentUser.songbookId
+          for (let i = 0; i < songbookData.length; i++) {
+            if (songbookData[i].id === req.body.songbookId) {
+              songbookData[i].songbookName = req.body.songbookName
+            }
+          }
+          User.updateOne({ email: req.user.email }, { $set: { songbookId: songbookData } })
+            .then((update) => {
+              res.status(200).json({
+                message: 'song updated in songbook'
+              })
+            })
+        })
     })
 })
 

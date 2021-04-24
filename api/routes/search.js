@@ -13,7 +13,7 @@ router.post('/songData', (req, res) => {
       const data = []
       for (let i = 0; i < info.length; i++) {
         if (info[i].verified) {
-          data.push(info[i].detail)
+          data.push(info[i])
         }
       }
 

@@ -16,17 +16,20 @@ router.post('/', verifyToken, (req, res) => {
     })
   }
 
-  new SongInfo({
-    userId: req.user._id,
-    name: req.user.name,
-    songId: req.body.songId,
-    detail: req.body.detail
-  })
-    .save()
-    .then((newSongInfo) => {
-      res.status(200).json({
-        message: 'song info added, to be verified'
+  User.findOne({ email: req.user.email })
+    .then((currentUser) => {
+      new SongInfo({
+        user: currentUser,
+        name: req.user.name,
+        songId: req.body.songId,
+        detail: req.body.detail
       })
+        .save()
+        .then((newSongInfo) => {
+          res.status(200).json({
+            message: 'song info added, to be verified'
+          })
+        })
     })
 })
 
