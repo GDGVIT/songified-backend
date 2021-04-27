@@ -203,7 +203,7 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
     })
 })
 
-router.get('/', verifyToken, (req, res) => {
+router.post('/', verifyToken, (req, res) => {
   if (!req.body.songbookId) {
     return res.status(400).json({
       errorMessage: 'missing required parameters. refer documentation'
