@@ -14,6 +14,13 @@ const analysisSchema = new Schema({
   {
     type: String,
     default: 'Processing'
+  },
+  userId: {
+    type: String,
+    required: true
+  },
+  songName: {
+    type: String
   }
 })
 

@@ -22,9 +22,11 @@ const isSignatureValid = function verifySignature (
   return signature === compareSignature
 }
 
-const analysisData = async function analysisData (songId) {
+const analysisData = async function analysisData (songId, userId, songName) {
   const analysis = new Analysis({
-    songId: songId
+    songId: songId,
+    userId: userId,
+    songName: songName
   })
 
   await analysis.save().then((analysis) => {
@@ -172,7 +174,6 @@ router.post('/song', verifyToken, upload.single('songFile'), (req, res) => {
       errorMessage: 'missing required file. refer documentation'
     })
   }
-
   // Step 1: Get File as multipart form data with name songFile
   const readable = new Readable()
   readable._read = () => {}
@@ -261,11 +262,12 @@ router.post('/song', verifyToken, upload.single('songFile'), (req, res) => {
               console.log(responseLibrary.data)
               console.log('Id of file to query: ' + responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
 
-              analysisData(responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
+              analysisData(responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id, req.user._id, req.body.songName)
 
               res.status(200).json({
                 message: 'file is being processed. Id to query for analysis result is given in Id',
-                id: responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id
+                id: responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id,
+                songName: req.body.songName
               })
             })
             .catch(function (error) {
@@ -290,8 +292,6 @@ router.post('/song', verifyToken, upload.single('songFile'), (req, res) => {
     })
 })
 
-// @TODO Add Auth Check
-
 router.post('/getAnalysedData', verifyToken, (req, res) => {
   if (!req.body.songId) {
     return res.status(400).json({
@@ -308,6 +308,20 @@ router.post('/getAnalysedData', verifyToken, (req, res) => {
           message: 'Processing Underway please check back after a while'
         })
       }
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error
+      })
+    })
+})
+
+router.get('/getAllUploads', verifyToken, (req, res) => {
+  Analysis.find({ userId: req.user._id })
+    .then((data) => {
+      res.status(200).json({
+        songs: data
+      })
     })
     .catch((error) => {
       res.status(400).json({

@@ -57,6 +57,42 @@ router.post('/create', verifyToken, (req, res) => {
     })
 })
 
+router.delete('/deleteSongbook', verifyToken, (req, res) => {
+  if (!req.body.songbookId) {
+    return res.status(400).json({
+      erroMessage: 'missing required parameters. refer documentation'
+    })
+  }
+
+  Songbook.deleteOne({ songbookId: req.body.songbookId })
+    .then((data) => {
+      User.findOne({ email: req.user.email })
+        .then((currentUser) => {
+          const ourdataDelete = currentUser.songbookId
+          console.log(ourdataDelete)
+          for (let i = 0; i < ourdataDelete.length; i++) {
+            if (ourdataDelete[i].id === req.body.songbookId) {
+              ourdataDelete.splice(i, 1)
+            }
+          }
+          console.log(ourdataDelete)
+          User.updateOne({ email: req.user.email },
+            { $set: { songbookId: ourdataDelete } })
+            .then((update) => {
+              res.status(200).json({
+                message: 'songbook deleted'
+              })
+            })
+        })
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        success: false,
+        err: error
+      })
+    })
+})
+
 router.patch('/songbookName', verifyToken, (req, res) => {
   if (!req.body.songbookName) {
     return res.status(400).json({
