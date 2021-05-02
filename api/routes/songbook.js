@@ -151,7 +151,9 @@ router.post('/addSong', verifyToken, (req, res) => {
       const newData = {
         songId: uuid4(),
         title: req.body.title,
-        body: req.body.body
+        body: req.body.body,
+        scale: req.body.scale,
+        tempo: req.body.tempo
       }
       ourdata.push(newData)
       Songbook.updateOne({ songbookId: req.body.songbookId },
@@ -196,6 +198,8 @@ router.patch('/updateSong', verifyToken, (req, res) => {
         if (ourdata[i].songId === req.body.songId) {
           ourdata[i].title = req.body.title
           ourdata[i].body = req.body.body
+          ourdata[i].scale = req.body.scale
+          ourdata[i].tempo = req.body.tempo
         }
       }
       Songbook.updateOne({ songbookId: req.body.songbookId },
