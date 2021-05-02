@@ -319,6 +319,34 @@ router.post('/getAnalysedData', verifyToken, (req, res) => {
 router.get('/getAllUploads', verifyToken, (req, res) => {
   Analysis.find({ userId: req.user._id })
     .then((data) => {
+      const transferData = []
+      for (let i = 0; i < data.length; i++) {
+        const info = {
+          songId: data[i]._id,
+          songName: data[i].songName,
+          status: data[i].status
+        }
+        transferData.push(info)
+      }
+      res.status(200).json({
+        songs: transferData
+      })
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error
+      })
+    })
+})
+
+router.post('/getUpload', verifyToken, (req, res) => {
+  if (!req.body.songId) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+  Analysis.findById(req.body.songId)
+    .then((data) => {
       res.status(200).json({
         songs: data
       })
