@@ -154,7 +154,9 @@ router.post('/addSong', verifyToken, (req, res) => {
         body: req.body.body,
         scale: req.body.scale,
         tempo: req.body.tempo,
-        artist: req.body.artist
+        artist: req.body.artist,
+        timesig: req.body.timesig,
+        imageurl: req.body.imageurl
       }
       ourdata.push(newData)
       Songbook.updateOne({ songbookId: req.body.songbookId },
