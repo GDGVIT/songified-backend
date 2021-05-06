@@ -204,6 +204,8 @@ router.patch('/updateSong', verifyToken, (req, res) => {
           ourdata[i].scale = req.body.scale
           ourdata[i].tempo = req.body.tempo
           ourdata[i].artist = req.body.artist
+          ourdata[i].timesig = req.body.timesig
+          ourdata[i].imageurl = req.body.imageurl
         }
       }
       Songbook.updateOne({ songbookId: req.body.songbookId },
