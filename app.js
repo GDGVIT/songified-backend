@@ -7,6 +7,7 @@ const songInfoRoute = require('./api/routes/songInfo-routes')
 const userInfoRoute = require('./api/routes/userInfo-routes')
 const songbookRoute = require('./api/routes/songbook')
 const uploadRoute = require('./api/routes/upload')
+const cors = require('cors')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -43,6 +44,8 @@ app.use((req, res, next) => {
   }
   next()
 })
+
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.status(200).json({
