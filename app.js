@@ -18,6 +18,9 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+// adding required headers to prevent CORS(Cross Origin Resourse Sharin) Error
+app.use(cors())
+
 mongoose.connect(process.env.MONGODB_DB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => {
     console.log('Connected to MongoDb Atlas')
@@ -32,9 +35,6 @@ app.use('/songbook', songbookRoute)
 app.use('/songInfo', songInfoRoute)
 app.use('/userInfo', userInfoRoute)
 app.use('/upload', uploadRoute)
-
-// adding required headers to prevent CORS(Cross Origin Resourse Sharin) Error
-app.use(cors())
 
 app.get('/', (req, res) => {
   res.status(200).json({
