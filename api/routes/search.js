@@ -21,6 +21,13 @@ router.post('/songData', (req, res) => {
         userComments: data
       })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 module.exports = router

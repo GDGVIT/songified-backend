@@ -83,7 +83,21 @@ router.delete('/deleteSongbook', verifyToken, (req, res) => {
                 message: 'songbook deleted'
               })
             })
+            .catch((error) => {
+              // Handle error
+                return res.status(400).json({
+                  success: false,
+                  err: error
+                })
+              })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
     .catch((error) => {
       return res.status(400).json({
@@ -122,8 +136,29 @@ router.patch('/songbookName', verifyToken, (req, res) => {
                 message: 'song updated in songbook'
               })
             })
+            .catch((error) => {
+              // Handle error
+                return res.status(400).json({
+                  success: false,
+                  err: error
+                })
+              })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 router.post('/addSong', verifyToken, (req, res) => {
@@ -166,7 +201,21 @@ router.post('/addSong', verifyToken, (req, res) => {
             message: 'song added to songbook'
           })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 router.patch('/updateSong', verifyToken, (req, res) => {
@@ -215,7 +264,21 @@ router.patch('/updateSong', verifyToken, (req, res) => {
             message: 'song updated in songbook'
           })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 router.delete('/deleteSong', verifyToken, (req, res) => {
@@ -246,7 +309,21 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
             message: 'song deleted from songbook'
           })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 router.post('/', verifyToken, (req, res) => {
@@ -262,6 +339,13 @@ router.post('/', verifyToken, (req, res) => {
         message: songbook
       })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 module.exports = router

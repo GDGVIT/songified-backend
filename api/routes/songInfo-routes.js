@@ -30,7 +30,21 @@ router.post('/', verifyToken, (req, res) => {
             message: 'song info added, to be verified'
           })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
+    .catch((error) => {
+      // Handle error
+        return res.status(400).json({
+          success: false,
+          err: error
+        })
+      })
 })
 
 router.get('/', verifyToken, (req, res) => {
@@ -58,18 +72,32 @@ router.post('/authenticate', verifyToken, (req, res) => {
       }
       SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: true } })
         .then((verified) => {
-          User.findOne({ _id: songInfo.userId })
+          User.findOne({ _id: songInfo.user._id })
             .then((user) => {
               let points = user.points
               points += 10
-              User.updateOne({ _id: songInfo.userId }, { $set: { points: points } })
+              User.updateOne({ _id: songInfo.user._id }, { $set: { points: points } })
                 .then((updated) => {
                   res.status(200).json({
                     Message: 'Verified Successfully'
                   })
                 })
             })
+            .catch((error) => {
+              // Handle error
+                return res.status(400).json({
+                  success: false,
+                  err: error
+                })
+              })
         })
+        .catch((error) => {
+          // Handle error
+            return res.status(400).json({
+              success: false,
+              err: error
+            })
+          })
     })
   } else {
     res.status(400).json({
@@ -94,17 +122,31 @@ router.post('/deauthenticate', verifyToken, (req, res) => {
       }
       SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: false } })
         .then((unverified) => {
-          User.findOne({ _id: unverifySongInfo.userId })
+          User.findOne({ _id: unverifySongInfo.user._id })
             .then((userUnverified) => {
               let points = userUnverified.points
               points -= 10
-              User.updateOne({ _id: unverifySongInfo.userId }, { $set: { points: points } })
+              User.updateOne({ _id: unverifySongInfo.user._id }, { $set: { points: points } })
                 .then((updatedUnverify) => {
                   res.status(200).json({
                     Message: 'Unverified Successfully'
                   })
                 })
+                .catch((error) => {
+                  // Handle error
+                    return res.status(400).json({
+                      success: false,
+                      err: error
+                    })
+                  })
             })
+            .catch((error) => {
+              // Handle error
+                return res.status(400).json({
+                  success: false,
+                  err: error
+                })
+              })
         })
     })
   } else {
