@@ -59,6 +59,8 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
             }
             ... on AudioAnalysisV6Finished {
              result{
+              bpm
+              key
               energyLevel
               genreTags
               moodTags
@@ -68,25 +70,6 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
 
             }
             }
-          fullScaleMusicalAnalysis {
-            __typename
-            ... on FullScaleMusicalAnalysisFailed {
-              error {
-                ... on Error {
-                  message
-                }
-              }
-            }
-            ... on FullScaleMusicalAnalysisFinished {
-              result {
-                bpm
-                key {
-                  values
-                  confidences
-                }
-              }
-            }
-          }
         }
       }
     }`,
@@ -104,11 +87,9 @@ const updateAnalysisData = async function updateAnalysisData (songId) {
 
   axios(config)
     .then(async function (response) {
-      const updateData1 = response.data.data.libraryTrack.fullScaleMusicalAnalysis
       const updateData2 = response.data.data.libraryTrack.audioAnalysisV6
       const updateData = {
-        audioAnalysis: updateData2,
-        fullScaleAnalysis: updateData1
+        audioAnalysis: updateData2
       }
 
       await Analysis.updateOne({ songId: songId },
@@ -151,16 +132,13 @@ router.post('/cyaniteWebHook', (req, res) => {
   }
   console.log('[info] signature is valid')
 
-  if (req.body.type === 'IN_DEPTH_ANALYSIS' && req.body.event.type === 'FULL_SCALE_MUSICAL_ANALYSIS' && req.body.event.status === 'FINISHED') {
+  if (req.body.event.type === 'AudioAnalysisV6' && req.body.event.status === 'finished') {
+    console.log('----------------------------------')
+    console.log('AUDIO ANALYSIS v6 FINISHED')
+    console.log('----------------------------------')
     console.log('[info] processing finish event')
-    console.log(req.body.type)
-    console.log('ID:' + req.body.id)
-
-    // NOTE: YOU NEED TO PUSH TO HEROKU TO TEST THE WEBHOOK
-
-    // You can use the result here, but keep in mind that you should probably process the result asynchronously
-    // The request of the incoming webhook will be canceled after 3 seconds.
-    updateAnalysisData(req.body.id)
+    console.log('ID:' + req.body.resource.id)
+    updateAnalysisData(req.body.resource.id)
   }
 
   return res.sendStatus(200)

@@ -85,19 +85,19 @@ router.delete('/deleteSongbook', verifyToken, (req, res) => {
             })
             .catch((error) => {
               // Handle error
-                return res.status(400).json({
-                  success: false,
-                  err: error
-                })
+              return res.status(400).json({
+                success: false,
+                err: error
               })
+            })
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       return res.status(400).json({
@@ -138,27 +138,27 @@ router.patch('/songbookName', verifyToken, (req, res) => {
             })
             .catch((error) => {
               // Handle error
-                return res.status(400).json({
-                  success: false,
-                  err: error
-                })
+              return res.status(400).json({
+                success: false,
+                err: error
               })
+            })
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 router.post('/addSong', verifyToken, (req, res) => {
@@ -203,19 +203,19 @@ router.post('/addSong', verifyToken, (req, res) => {
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 router.patch('/updateSong', verifyToken, (req, res) => {
@@ -266,19 +266,19 @@ router.patch('/updateSong', verifyToken, (req, res) => {
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 router.delete('/deleteSong', verifyToken, (req, res) => {
@@ -311,19 +311,19 @@ router.delete('/deleteSong', verifyToken, (req, res) => {
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 router.post('/', verifyToken, (req, res) => {
@@ -341,11 +341,11 @@ router.post('/', verifyToken, (req, res) => {
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 module.exports = router

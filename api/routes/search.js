@@ -23,11 +23,11 @@ router.post('/songData', (req, res) => {
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 module.exports = router

@@ -32,19 +32,19 @@ router.post('/', verifyToken, (req, res) => {
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
     .catch((error) => {
       // Handle error
-        return res.status(400).json({
-          success: false,
-          err: error
-        })
+      return res.status(400).json({
+        success: false,
+        err: error
       })
+    })
 })
 
 router.get('/', verifyToken, (req, res) => {
@@ -85,19 +85,19 @@ router.post('/authenticate', verifyToken, (req, res) => {
             })
             .catch((error) => {
               // Handle error
-                return res.status(400).json({
-                  success: false,
-                  err: error
-                })
+              return res.status(400).json({
+                success: false,
+                err: error
               })
+            })
         })
         .catch((error) => {
           // Handle error
-            return res.status(400).json({
-              success: false,
-              err: error
-            })
+          return res.status(400).json({
+            success: false,
+            err: error
           })
+        })
     })
   } else {
     res.status(400).json({
@@ -134,19 +134,19 @@ router.post('/deauthenticate', verifyToken, (req, res) => {
                 })
                 .catch((error) => {
                   // Handle error
-                    return res.status(400).json({
-                      success: false,
-                      err: error
-                    })
+                  return res.status(400).json({
+                    success: false,
+                    err: error
                   })
+                })
             })
             .catch((error) => {
               // Handle error
-                return res.status(400).json({
-                  success: false,
-                  err: error
-                })
+              return res.status(400).json({
+                success: false,
+                err: error
               })
+            })
         })
     })
   } else {
