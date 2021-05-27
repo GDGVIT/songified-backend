@@ -14,6 +14,10 @@ const songInfoSchema = new Schema({
     type: String,
     required: true
   },
+  songName: {
+    type: String,
+    required: true
+  },
   detail: {
     type: String,
     required: true

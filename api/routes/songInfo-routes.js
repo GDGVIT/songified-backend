@@ -10,6 +10,12 @@ router.post('/', verifyToken, (req, res) => {
     })
   }
 
+  if (!req.body.songName) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
   if (!req.body.detail) {
     return res.status(400).json({
       errorMessage: 'missing required parameters. refer documentation'
@@ -22,6 +28,7 @@ router.post('/', verifyToken, (req, res) => {
         user: currentUser,
         name: req.user.name,
         songId: req.body.songId,
+        songName: req.body.songName,
         detail: req.body.detail
       })
         .save()
