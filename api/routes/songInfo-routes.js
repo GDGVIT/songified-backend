@@ -82,8 +82,12 @@ router.post('/authenticate', verifyToken, (req, res) => {
           User.findOne({ _id: songInfo.user._id })
             .then((user) => {
               let points = user.points
+              let levels = user.level
               points += 10
-              User.updateOne({ _id: songInfo.user._id }, { $set: { points: points } })
+              if (points % 50 === 0) {
+                levels += 1
+              }
+              User.updateOne({ _id: songInfo.user._id }, { $set: { points: points, level: levels } })
                 .then((updated) => {
                   res.status(200).json({
                     Message: 'Verified Successfully'
@@ -132,8 +136,15 @@ router.post('/deauthenticate', verifyToken, (req, res) => {
           User.findOne({ _id: unverifySongInfo.user._id })
             .then((userUnverified) => {
               let points = userUnverified.points
+              let levels = userUnverified.level
+              console.log(levels)
               points -= 10
-              User.updateOne({ _id: unverifySongInfo.user._id }, { $set: { points: points } })
+              if (points % 50 === 0) {
+                levels -= 1
+                console.log(levels)
+              }
+              console.log(points)
+              User.updateOne({ _id: unverifySongInfo.user._id }, { $set: { points: points, level: levels } })
                 .then((updatedUnverify) => {
                   res.status(200).json({
                     Message: 'Unverified Successfully'
