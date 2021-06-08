@@ -240,6 +240,13 @@ router.post('/song', verifyToken, upload.single('songFile'), (req, res) => {
               console.log(responseLibrary.data)
               console.log('Id of file to query: ' + responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id)
 
+              if (responseLibrary.data.data.libraryTrackCreate.__typename === 'LibraryTrackCreateError') {
+                return res.status(500).json({
+                  message: 'error',
+                  code: responseLibrary.data.data.libraryTrackCreate.code
+                })
+              }
+
               analysisData(responseLibrary.data.data.libraryTrackCreate.createdLibraryTrack.id, req.user._id, req.body.songName)
 
               res.status(200).json({
