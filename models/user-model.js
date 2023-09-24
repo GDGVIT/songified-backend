@@ -7,15 +7,24 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  googleId: {
+  thumbnail: {
     type: String,
     required: true
   },
   points: {
     type: Number
   },
+  level: {
+    type: Number,
+    default: 1
+  },
   songbookId: {
-    type: String
+    type: Array,
+    default: []
+  },
+  email: {
+    type: String,
+    required: true
   }
 })
 

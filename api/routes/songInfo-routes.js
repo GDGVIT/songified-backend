@@ -1,9 +1,15 @@
 const router = require('express').Router()
-const authCheck = require('./authCheck')
+const verifyToken = require('../middleware/verifyToken')
 const SongInfo = require('../../models/songInfo-model')
 const User = require('../../models/user-model')
 
-router.post('/', authCheck, (req, res) => {
+router.post('/', verifyToken, (req, res) => {
+  if (!req.body.songId) {
+    return res.status(400).json({
+      error: 'missing required parameters. refer documentation'
+    })
+  }
+
   if (!req.body.songName) {
     return res.status(400).json({
       error: 'missing required parameters. refer documentation'
@@ -16,21 +22,39 @@ router.post('/', authCheck, (req, res) => {
     })
   }
 
-  new SongInfo({
-    userId: req.user.googleId,
-    name: req.user.username,
-    songName: req.body.songName.toString().toLowerCase(),
-    detail: req.body.detail
-  })
-    .save()
-    .then((newSongInfo) => {
-      res.status(200).json({
-        message: 'song info added, to be verified'
+  User.findOne({ email: req.user.email })
+    .then((currentUser) => {
+      new SongInfo({
+        user: currentUser,
+        name: req.user.name,
+        songId: req.body.songId,
+        songName: req.body.songName,
+        detail: req.body.detail
+      })
+        .save()
+        .then((newSongInfo) => {
+          res.status(200).json({
+            message: 'song info added, to be verified'
+          })
+        })
+        .catch((error) => {
+          // Handle error
+          return res.status(400).json({
+            success: false,
+            err: error
+          })
+        })
+    })
+    .catch((error) => {
+      // Handle error
+      return res.status(400).json({
+        success: false,
+        err: error
       })
     })
 })
 
-router.get('/', authCheck, (req, res) => {
+router.get('/', verifyToken, (req, res) => {
   SongInfo.find()
     .then((infos) => {
       res.status(200).json({
@@ -39,8 +63,8 @@ router.get('/', authCheck, (req, res) => {
     })
 })
 
-router.post('/authenticate', authCheck, (req, res) => {
-  if (req.user.username === 'admin songified') {
+router.post('/authenticate', verifyToken, (req, res) => {
+  if (req.user.name === 'admin songified') {
     if (!req.body.id) {
       return res.status(400).json({
         errorMessage: 'missing required parameters. refer documentation'
@@ -55,17 +79,35 @@ router.post('/authenticate', authCheck, (req, res) => {
       }
       SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: true } })
         .then((verified) => {
-          User.findOne({ googleId: songInfo.userId })
+          User.findOne({ _id: songInfo.user._id })
             .then((user) => {
               let points = user.points
+              let levels = user.level
               points += 10
-              User.updateOne({ googleId: songInfo.userId }, { $set: { points: points } })
+              if (points % 50 === 0) {
+                levels += 1
+              }
+              User.updateOne({ _id: songInfo.user._id }, { $set: { points: points, level: levels } })
                 .then((updated) => {
                   res.status(200).json({
                     Message: 'Verified Successfully'
                   })
                 })
             })
+            .catch((error) => {
+              // Handle error
+              return res.status(400).json({
+                success: false,
+                err: error
+              })
+            })
+        })
+        .catch((error) => {
+          // Handle error
+          return res.status(400).json({
+            success: false,
+            err: error
+          })
         })
     })
   } else {
@@ -75,8 +117,8 @@ router.post('/authenticate', authCheck, (req, res) => {
   }
 })
 
-router.post('/deauthenticate', authCheck, (req, res) => {
-  if (req.user.username === 'admin songified') {
+router.post('/deauthenticate', verifyToken, (req, res) => {
+  if (req.user.name === 'admin songified') {
     if (!req.body.id) {
       return res.status(400).json({
         error: 'missing required parameters. refer documentation'
@@ -91,16 +133,37 @@ router.post('/deauthenticate', authCheck, (req, res) => {
       }
       SongInfo.updateOne({ _id: req.body.id }, { $set: { verified: false } })
         .then((unverified) => {
-          User.findOne({ googleId: unverifySongInfo.userId })
+          User.findOne({ _id: unverifySongInfo.user._id })
             .then((userUnverified) => {
               let points = userUnverified.points
+              let levels = userUnverified.level
+              console.log(levels)
               points -= 10
-              User.updateOne({ googleId: unverifySongInfo.userId }, { $set: { points: points } })
+              if (points % 50 === 0) {
+                levels -= 1
+                console.log(levels)
+              }
+              console.log(points)
+              User.updateOne({ _id: unverifySongInfo.user._id }, { $set: { points: points, level: levels } })
                 .then((updatedUnverify) => {
                   res.status(200).json({
                     Message: 'Unverified Successfully'
                   })
                 })
+                .catch((error) => {
+                  // Handle error
+                  return res.status(400).json({
+                    success: false,
+                    err: error
+                  })
+                })
+            })
+            .catch((error) => {
+              // Handle error
+              return res.status(400).json({
+                success: false,
+                err: error
+              })
             })
         })
     })

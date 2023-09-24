@@ -4,20 +4,24 @@
 </a>
 	<h2 align="center"> Songified  </h2>
 	<h4 align="center"> Simplifying Getting Song Information <h4>
+	<a href="https://cyanite.ai/">
+	<img src="https://cyanite.ai/wp-content/uploads/2019/08/CyaniteWebsite1.png" width="300"alt="Cyanite AI"/>
+	</a>
+	<h4> Powered By Cyanite API <h4>
 </p>
 
 ---
 [![Join Us](https://img.shields.io/badge/Join%20Us-Developer%20Student%20Clubs-red)](https://dsc.community.dev/vellore-institute-of-technology/)
 [![Discord Chat](https://img.shields.io/discord/760928671698649098.svg)](https://discord.gg/498KVdSKWR)
 
-[![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=flat-square&logo=appveyor)](INSERT_LINK_FOR_DOCS_HERE)
+[![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=flat-square&logo=appveyor)](https://documenter.getpostman.com/view/14038453/Tz5p6dH9)
   [![UI ](https://img.shields.io/badge/User%20Interface-Link%20to%20UI-orange?style=flat-square&logo=appveyor)](INSERT_UI_LINK_HERE)
 
 
 ## Features
 - [X]   User Account Creation
 - [X]   Search Song and gets Tempo and Key (Sign In Not Required)
-- [ ]   Upload Song and gets Tempo and Key (Sign In Required)
+- [X]   Upload Song and gets Tempo and Key (Sign In Required)
 - [X]   SongBook (Sign In Required)
 - [X]   Enter User Info About Songs to Database (Sign In Required)
 - [X]   Admin Verification of User Info (Sign In Required)
@@ -29,20 +33,20 @@
 
 ## Dependencies
  - express
- - body-parser
  - dotenv
  - morgan
  - mongoose
- - cookie-session
- - passport
- - passport-google-oauth20
+ - jsonwebtoken
+ - firebase-admin 
  - uuid4
+ - axios
+ - multer
 
 
 ## Running
 
 
-< directions to install >
+< directions to install>
 ```bash
 < insert code >
 ```
